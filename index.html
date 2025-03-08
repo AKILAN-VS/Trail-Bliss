@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="style.css" />
+    <title>Trail Bliss</title>
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+        const tourCards = document.querySelectorAll(".card");
+
+        tourCards.forEach((card) => {
+            card.addEventListener("click", function () {
+                const itemName = card.querySelector("h2").innerText;
+                const itemPrice = parseFloat(card.querySelector(".cost").innerText.replace(/[^0-9.]/g, ""));
+
+                addToCart(itemName, itemPrice);
+            });
+        });
+    });
+    function checkout() {
+    if (cart.length === 0) {
+        alert("Your cart is empty!");
+        return;
+    }
+
+    let totalAmount = cart.reduce((sum, item) => sum + item.price, 0).toFixed(2);
+    alert(`Thank you for your purchase! Your total is $${totalAmount}`);
+    cart = [];
+
+    updateCart();
+}
+
+document.addEventListener("DOMContentLoaded", function () {
+    document.getElementById("checkout-btn").addEventListener("click", checkout);
+});
+    </script>
+</head>
+
+<body>
+
+        <section class="nav-bar">
+            <div class="logo">Trail Bliss</div>
+            <ul class="menu">
+                <li><a href="#">home</a></li>
+                <li><a href="#tour">tours</a></li>
+                <li><a href="#">package</a></li>
+                <li><a href="#blog">blog</a></li>
+                <li><a href="#">about us</a></li>
+                <li><a href="#">contact us</a></li>
+            </ul>
+            </div>
+
+        </section>
+        <section class="banner">
+            <div class="video-container">
+                <video autoplay loop muted playsinline>
+                    <source src="bgvideo2.mp4" type="video/mp4">
+                    Your browser does not support the video tag.
+                </video>
+            </div>
+            <div class="banner-text-item">
+                <div class="banner-heading">
+                    <h1>Your Gateway to Unforgettable Journeys</h1>
+                </div>
+                <form class="form">
+                    <input type="text" list="mylist" placeholder="Where would you like to go?">
+                    <datalist id="mylist">
+                        <option>London</option>
+                        <option>Canada</option>
+                        <option>Monaco</option>
+                        <option>France</option>
+                        <option>Japan</option>
+                        <option>Switzerland</option>
+                        <option>Seoul</option>
+                    </datalist>
+                    <input type="date" class="date">
+                    <a href="#" class="book">book</a>
+                </form>
+            </div>
+        </section>
+        
+        <section class="services">
+            <div class="service-item">
+                <img src="t4.png">
+                <h2>8000+ Our Local Guides</h2>
+            </div>
+            <div class="service-item">
+                <img src="t3.png">
+                <h2>100% Trusted Tour Agency</h2>
+            </div>
+            <div class="service-item">
+                <img src="t2.png">
+                <h2>28+ Years of Travel Experience</h2>
+            </div>
+            <div class="service-item">
+                <img src="t1.png">
+                <h2>98% Our Travelers are Happy</h2>
+            </div>
+        </section>
+        <section class="places" id="tour">
+            <div class="places-text">
+                <small>FEATURED TOURS PACKAGES</small>
+                <h2>Favourite Places</h2>
+            </div>
+
+            <div class="cards">
+                <div class="card">
+                    <div class="zoom-img">
+                        <div class="img-card">
+                            <img
+                                src="niagara2.jpg">
+                        </div>
+                    </div>
+
+                    <div class="text">
+                        <span class="rating">⭐⭐⭐⭐⭐</span>
+                        <h2>The Niagara Falls</h2>
+                        <p class="cost">$1870 / Per Person</p>
+                        <div class="card-box">
+                            <p class="time">🕓 2 Days</p>
+                            <p class="location">✈ Ontario-United States Border</p>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="card">
+                    <div class="zoom-img">
+                        <div class="img-card">
+                            <img src="eiffel-tower.jpg">
+                        </div>
+                    </div>
+
+                    <div class="text">
+                        <span class="rating">⭐⭐⭐⭐⭐</span>
+                        <h2>Eiffel Tower</h2>
+                        <p class="cost">$1870 / Per Person</p>
+                        <div class="card-box">
+                            <p class="time">🕓 3 Days</p>
+                            <p class="location">✈ Paris, France</p>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="card">
+                    <div class="zoom-img">
+                        <div class="img-card">
+                            <img src="sanfrancisco.jpg">
+                        </div>
+                    </div>
+
+                    <div class="text">
+                        <span class="rating">⭐⭐⭐⭐⭐</span>
+                        <h2>Golden Gate Bridge</h2>
+                        <p class="cost">$1870 / Per Person</p>
+                        <div class="card-box">
+                            <p class="time">🕓 3 Days</p>
+                            <p class="location">✈ California, United States</p>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="card">
+                    <div class="zoom-img">
+                        <div class="img-card">
+                            <img
+                                src="tokyo.jpg">
+                        </div>
+                    </div>
+
+                    <div class="text">
+                        <span class="rating">⭐⭐⭐⭐⭐</span>
+                        <h2>Tokyo</h2>
+                        <p class="cost">$1870 / Per Person</p>
+                        <div class="card-box">
+                            <p class="time">🕓 3 Days</p>
+                            <p class="location">✈ Tokyo, Japan</p>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="card">
+                    <div class="zoom-img">
+                        <div class="img-card">
+                            <img src="petronas.jpg">
+                        </div>
+                    </div>
+
+                    <div class="text">
+                        <span class="rating">⭐⭐⭐⭐⭐</span>
+                        <h2>Petronas Twin Towers</h2>
+                        <p class="cost">$1870 / Per Person</p>
+                        <div class="card-box">
+                            <p class="time">🕓 3 Days</p>
+                            <p class="location">✈ Kuala Lampur, Malaysia</p>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="card">
+                    <div class="zoom-img">
+                        <div class="img-card">
+                            <img
+                                src="opera.jpg">
+                        </div>
+                    </div>
+
+                    <div class="text">
+                        <span class="rating">⭐⭐⭐⭐⭐</span>
+                        <h2>Sydney Opera House</h2>
+                        <p class="cost">$1870 / Per Person</p>
+                        <div class="card-box">
+                            <p class="time">🕓 3 Days</p>
+                            <p class="location">✈ Sydney, Australia</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <section class="about">
+            <div class="about-img">
+                <img src="explore2.jpg">
+            </div>
+            <div class="about-text">
+                <small>ABOUT OUR COMPANY</small>
+                <h2>Website for planning trips</h2>
+                <p>TrailBliss is a state-of-the-art travel website designed to revolutionize 
+                    the way people explore the world.</p>
+
+                <label><input type="checkbox" checked>Personalized travel experiences tailored to your preferences</label>
+                <label><input type="checkbox" checked>Expert local guides ensuring authentic and memorable journeys</label>
+                <label><input type="checkbox" checked>24/7 customer support for a hassle-free travel experience</label>
+                <label><input type="checkbox" checked>Sustainable and responsible tourism practices for a better planet</label>
+                <a href="#">ABOUT US</a>
+            </div>
+        </section>
+        <div class="cart">
+            <h2>Your Cart</h2>
+            <ul id="cart-items"></ul>
+            <p>Total: $<span id="cart-total">0</span></p>
+            <button id="checkout-btn" onclick="checkout()">Checkout</button>
+        </div>
+        <section id="blog" class="blog-section">
+            <div class="blog-header">
+                <h2>Travel Inspiration & Tips</h2>
+                <p>Explore our latest articles on travel experiences, guides, and tips.</p>
+            </div>
+        
+            <div class="blog-container">
+                <div class="blog-post">
+                    <img src="paris.jpg" alt="Paris Travel Guide">
+                    <h3>Ultimate Guide to Exploring Paris</h3>
+                    <p>Discover the must-visit places, hidden gems, and essential travel tips for an unforgettable trip to Paris.</p>
+                    <a href="#">Read More</a>
+                </div>
+        
+                <div class="blog-post">
+                    <img src="budget.jpg" alt="Budget Travel">
+                    <h3>Budget vs. Luxury Travel: Which is for You?</h3>
+                    <p>Should you splurge or save? Explore the pros and cons of both travel styles.</p>
+                    <a href="#">Read More</a>
+                </div>
+        
+                <div class="blog-post">
+                    <img src="adventure.jpg" alt="Adventure Travel">
+                    <h3>Top 5 Destinations for Thrill-Seekers</h3>
+                    <p>From skydiving in Dubai to scuba diving in the Great Barrier Reef – adventure awaits!</p>
+                    <a href="#">Read More</a>
+                </div>
+            </div>
+        </section>
+        
+        <div class="footer">
+            <div class="links">
+                <h3>Quick Links</h3>
+                <ul>
+                    <li>Offers & Discounts</li>
+                    <li>Get Coupon</li>
+                    <li>Contact Us</li>
+                    <li>About</li>
+                </ul>
+            </div>
+            <div class="links">
+                <h3>New Products</h3>
+                <ul>
+                    <li>Woman Cloth</li>
+                    <li>Fashion Accessories</li>
+                    <li>Man Accessories</li>
+                    <li>Rubber made Toys</li>
+                </ul>
+            </div>
+            <div class="links">
+                <h3>Support</h3>
+                <ul>
+                    <li>Frequently Asked Questions</li>
+                    <li>Report a Payment Issue</li>
+                    <li>Terms & Conditions</li>
+                    <li>Privacy Policy</li>
+                </ul>
+            </div>
+        </div>
+
+</body>
+
+</html>
