@@ -40,6 +40,22 @@ document.addEventListener("DOMContentLoaded", function () {
 </head>
 
 <body>
+    <script>
+        function handleBooking() {
+          const destination = document.getElementById("destination").value.trim().toLowerCase();
+          const date = document.getElementById("travelDate").value;
+      
+          if (!destination || !date) {
+            alert("Please select a destination and a date.");
+            return;
+          }
+      
+          // Redirect to a destination-specific packages page
+          // e.g., /packages/japan.html
+          window.location.href = `/packages/${destination}.html?date=${encodeURIComponent(date)}`;
+        }
+      </script>
+      
 
         <section class="nav-bar">
             <div class="logo">Trail Bliss</div>
@@ -48,7 +64,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 <li><a href="#tour">tours</a></li>
                 <li><a href="#">package</a></li>
                 <li><a href="#blog">blog</a></li>
-                <li><a href="#">about us</a></li>
+                <li><a href="#about">about us</a></li>
                 <li><a href="#">contact us</a></li>
             </ul>
             </div>
@@ -65,20 +81,22 @@ document.addEventListener("DOMContentLoaded", function () {
                 <div class="banner-heading">
                     <h1>Your Gateway to Unforgettable Journeys</h1>
                 </div>
-                <form class="form">
-                    <input type="text" list="mylist" placeholder="Where would you like to go?">
+                <form class="form" id="travelForm">
+                    <input type="text" list="mylist" id="destination" placeholder="Where would you like to go?" required>
                     <datalist id="mylist">
-                        <option>London</option>
-                        <option>Canada</option>
-                        <option>Monaco</option>
-                        <option>France</option>
-                        <option>Japan</option>
-                        <option>Switzerland</option>
-                        <option>Seoul</option>
+                      <option value="London">
+                      <option value="Canada">
+                      <option value="Monaco">
+                      <option value="Japan">
+                      <option value="Switzerland">
+                      <option value="Seoul">
                     </datalist>
-                    <input type="date" class="date">
-                    <a href="#" class="book">book</a>
-                </form>
+                    
+                    <input type="date" class="date" id="travelDate" required>
+                    <a href="#" class="book" onclick="handleBooking()">Book</a>
+                  </form>
+                  
+                  
             </div>
         </section>
         
@@ -220,7 +238,7 @@ document.addEventListener("DOMContentLoaded", function () {
             </div>
         </section>
         
-        <section class="about">
+        <section class="about" id="about">
             <div class="about-img">
                 <img src="explore2.jpg">
             </div>
@@ -245,60 +263,66 @@ document.addEventListener("DOMContentLoaded", function () {
         </div>
         <section id="blog" class="blog-section">
             <div class="blog-header">
-                <h2>Travel Inspiration & Tips</h2>
-                <p>Explore our latest articles on travel experiences, guides, and tips.</p>
+              <h2>Travel Inspiration & Tips</h2>
+              <p>Explore our latest articles on travel experiences, guides, and tips.</p>
             </div>
-        
+          
             <div class="blog-container">
-                <div class="blog-post">
-                    <img src="paris.jpg" alt="Paris Travel Guide">
-                    <h3>Ultimate Guide to Exploring Paris</h3>
-                    <p>Discover the must-visit places, hidden gems, and essential travel tips for an unforgettable trip to Paris.</p>
-                    <a href="#">Read More</a>
-                </div>
-        
-                <div class="blog-post">
-                    <img src="budget.jpg" alt="Budget Travel">
-                    <h3>Budget vs. Luxury Travel: Which is for You?</h3>
-                    <p>Should you splurge or save? Explore the pros and cons of both travel styles.</p>
-                    <a href="#">Read More</a>
-                </div>
-        
-                <div class="blog-post">
-                    <img src="adventure.jpg" alt="Adventure Travel">
-                    <h3>Top 5 Destinations for Thrill-Seekers</h3>
-                    <p>From skydiving in Dubai to scuba diving in the Great Barrier Reef – adventure awaits!</p>
-                    <a href="#">Read More</a>
-                </div>
+              <div class="blog-post">
+                <a href="blogs/paris-guide.html">
+                  <img src="paris.jpg" alt="Paris Travel Guide">
+                  <h3>Ultimate Guide to Exploring Paris</h3>
+                  <p>Discover the must-visit places, hidden gems, and essential travel tips for an unforgettable trip to Paris.</p>
+                  <span>Read More</span>
+                </a>
+              </div>
+          
+              <div class="blog-post">
+                <a href="blogs/budget-vs-luxury.html">
+                  <img src="budget.jpg" alt="Budget Travel">
+                  <h3>Budget vs. Luxury Travel: Which is for You?</h3>
+                  <p>Should you splurge or save? Explore the pros and cons of both travel styles.</p>
+                  <span>Read More</span>
+                </a>
+              </div>
+          
+              <div class="blog-post">
+                <a href="blogs/adventure-destinations.html">
+                  <img src="adventure.jpg" alt="Adventure Travel">
+                  <h3>Top 5 Destinations for Thrill-Seekers</h3>
+                  <p>From skydiving in Dubai to scuba diving in the Great Barrier Reef – adventure awaits!</p>
+                  <span>Read More</span>
+                </a>
+              </div>
             </div>
-        </section>
+          </section>
         
         <div class="footer">
             <div class="links">
                 <h3>Quick Links</h3>
                 <ul>
-                    <li>Offers & Discounts</li>
-                    <li>Get Coupon</li>
-                    <li>Contact Us</li>
-                    <li>About</li>
+                    <li><a href="offers.html">Offers & Discounts</a></li>
+                    <li><a href="coupon.html">Get Coupon</a></li>
+                    <li><a href="contact.html">Contact Us</a></li>
+                    <li><a href="about.html">About</a></li>
                 </ul>
             </div>
             <div class="links">
                 <h3>New Products</h3>
                 <ul>
-                    <li>Woman Cloth</li>
-                    <li>Fashion Accessories</li>
-                    <li>Man Accessories</li>
-                    <li>Rubber made Toys</li>
+                    <li><a href="woman_cloth.html">Woman Cloth</a></li>
+                    <li><a href="fashion_accessories.html">Fashion Accessories</a></li>
+                    <li><a href="man_accessories.html">Man Accessories</a></li>
+                    <li><a href="rubber_toys.html">Rubber made Toys</a></li>
                 </ul>
             </div>
             <div class="links">
                 <h3>Support</h3>
                 <ul>
-                    <li>Frequently Asked Questions</li>
-                    <li>Report a Payment Issue</li>
-                    <li>Terms & Conditions</li>
-                    <li>Privacy Policy</li>
+                    <li><a href="faq.html">Frequently Asked Questions</a></li>
+                    <li><a href="payment_issue.html">Report a Payment Issue</a></li>
+                    <li><a href="terms.html">Terms & Conditions</a></li>
+                    <li><a href="privacy.html">Privacy Policy</a></li>
                 </ul>
             </div>
         </div>

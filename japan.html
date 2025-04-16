@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Japan Tour Packages</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', sans-serif;
+      background: linear-gradient(to right, #ffecd2, #fcb69f);
+      color: #333;
+    }
+
+    header {
+      padding: 2rem;
+      text-align: center;
+      background: #ff6b6b;
+      color: white;
+      font-size: 2rem;
+      font-weight: bold;
+      letter-spacing: 1px;
+    }
+
+    .container {
+      max-width: 1000px;
+      margin: 2rem auto;
+      padding: 0 1rem;
+    }
+
+    .package {
+      background: white;
+      border-radius: 20px;
+      box-shadow: 0 6px 18px rgba(0, 0, 0, 0.1);
+      padding: 1.5rem 2rem;
+      margin-bottom: 1.5rem;
+      cursor: pointer;
+      transition: transform 0.2s ease;
+    }
+
+    .package:hover {
+      transform: scale(1.02);
+    }
+
+    .package h3 {
+      margin-top: 0;
+      color: #ff6b6b;
+    }
+
+    #bookingForm {
+      display: none;
+      background: white;
+      padding: 2rem;
+      border-radius: 20px;
+      box-shadow: 0 6px 18px rgba(0, 0, 0, 0.15);
+      margin-top: 2rem;
+    }
+
+    #bookingForm input, #bookingForm button {
+      width: 100%;
+      padding: 0.8rem;
+      margin-top: 1rem;
+      border-radius: 10px;
+      border: 1px solid #ccc;
+      font-size: 1rem;
+    }
+
+    #bookingForm input:focus {
+      outline: none;
+      border-color: #ff6b6b;
+      box-shadow: 0 0 0 2px rgba(255, 107, 107, 0.2);
+    }
+
+    #bookingForm button {
+      background-color: #ff6b6b;
+      color: white;
+      border: none;
+      cursor: pointer;
+      font-weight: bold;
+    }
+
+    #bookingForm button:hover {
+      background-color: #e85d5d;
+    }
+  </style>
+</head>
+<body>
+
+  <header>Japan Tour Packages</header>
+
+  <div class="container">
+    <div class="package" onclick="openBookingForm('Cherry Blossom Tour')">
+      <h3>Cherry Blossom Tour</h3>
+      <p>Explore Tokyo, Kyoto, and Mount Fuji during the breathtaking sakura season.</p>
+    </div>
+
+    <div class="package" onclick="openBookingForm('Cultural Heritage Tour')">
+      <h3>Cultural Heritage Tour</h3>
+      <p>Discover temples, tea ceremonies, and traditional arts in Kyoto and Nara.</p>
+    </div>
+
+    <div class="package" onclick="openBookingForm('Tokyo Tech Adventure')">
+      <h3>Tokyo Tech Adventure</h3>
+      <p>Experience Akihabara, Shibuya, and cutting-edge innovations in Japan’s capital.</p>
+    </div>
+
+    <div id="bookingForm">
+      <h2>Confirm Your Booking</h2>
+      <form onsubmit="submitBooking(event)">
+        <input type="text" placeholder="Your Name" required>
+        <input type="email" placeholder="Email" required>
+        <input type="number" placeholder="Number of Travellers" required>
+        <button type="submit">Confirm Booking</button>
+      </form>
+    </div>
+  </div>
+
+  <script>
+    function openBookingForm(packageName) {
+      document.getElementById("bookingForm").style.display = "block";
+      window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
+    }
+
+    function submitBooking(event) {
+      event.preventDefault();
+      alert("Booking confirmed! ✈️ Arigatou Gozaimasu!");
+    }
+  </script>
+
+</body>
+</html>

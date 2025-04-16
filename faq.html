@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Frequently Asked Questions - Trail Bliss</title>
+    <link rel="stylesheet" href="footer_styling2.css">
+</head>
+<body>
+    <div class="faq-container">
+        <h1>Frequently Asked Questions</h1>
+        <section class="faq-section">
+            <h2>What is your return policy?</h2>
+            <p>Our return policy allows you to return items within 30 days of purchase for a full refund.  See our <a href="terms.html">Terms & Conditions</a> for details.</p>
+        </section>
+        <section class="faq-section">
+            <h2>How can I track my order?</h2>
+            <p>You can track your order using the tracking number provided in your shipping confirmation email.  Visit our <a href="#">Order Tracking</a> page.</p>
+        </section>
+        <section class="faq-section">
+            <h2>Do you offer international shipping?</h2>
+            <p>Yes, we offer international shipping to most countries. Shipping costs and delivery times vary depending on the destination.</p>
+        </section>
+        <section class="faq-section">
+          <h2>What payment methods do you accept?</h2>
+          <p>We accept all major credit cards (Visa, Mastercard, American Express) and PayPal.</p>
+        </section>
+        <p class="back-link"><a href="index.html">Back to Homepage</a></p>
+    </div>
+    <script>
+      //Basic script to add interactivity
+      const faqSections = document.querySelectorAll('.faq-section');
+
+      faqSections.forEach(section => {
+        section.addEventListener('click', () => {
+          section.classList.toggle('expanded');
+        });
+      });
+    </script>
+</body>
+</html>

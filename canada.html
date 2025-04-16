@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Canada Tour Packages</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', sans-serif;
+      background: linear-gradient(to right, #d7effb, #c5e1f7);
+      color: #333;
+    }
+
+    header {
+      padding: 2rem;
+      text-align: center;
+      background: #1e90ff;
+      color: white;
+      font-size: 2rem;
+      font-weight: bold;
+      letter-spacing: 1px;
+    }
+
+    .container {
+      max-width: 1000px;
+      margin: 2rem auto;
+      padding: 0 1rem;
+    }
+
+    .package {
+      background: white;
+      border-radius: 20px;
+      box-shadow: 0 6px 18px rgba(0, 0, 0, 0.1);
+      padding: 1.5rem 2rem;
+      margin-bottom: 1.5rem;
+      cursor: pointer;
+      transition: transform 0.2s ease;
+    }
+
+    .package:hover {
+      transform: scale(1.02);
+    }
+
+    .package h3 {
+      margin-top: 0.5rem;
+      color: #1e90ff;
+    }
+
+    .package-img {
+      width: 100%;
+      height: 200px;
+      object-fit: cover;
+      border-radius: 15px;
+      margin-bottom: 1rem;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+      transition: transform 0.3s ease;
+    }
+
+    .package:hover .package-img {
+      transform: scale(1.02);
+    }
+
+    #bookingForm {
+      display: none;
+      background: white;
+      padding: 2rem;
+      border-radius: 20px;
+      box-shadow: 0 6px 18px rgba(0, 0, 0, 0.15);
+      margin-top: 2rem;
+    }
+
+    #bookingForm input, #bookingForm select, #bookingForm button {
+      width: 100%;
+      padding: 0.8rem;
+      margin-top: 1rem;
+      border-radius: 10px;
+      border: 1px solid #ccc;
+      font-size: 1rem;
+    }
+
+    #bookingForm input:focus, #bookingForm select:focus {
+      outline: none;
+      border-color: #1e90ff;
+      box-shadow: 0 0 0 2px rgba(30, 144, 255, 0.2);
+    }
+
+    #bookingForm button {
+      background-color: #1e90ff;
+      color: white;
+      border: none;
+      cursor: pointer;
+      font-weight: bold;
+    }
+
+    #bookingForm button:hover {
+      background-color: #187bcd;
+    }
+
+    #priceDisplay {
+      margin-top: 1rem;
+      font-weight: bold;
+      font-size: 1.1rem;
+      color: #444;
+    }
+  </style>
+</head>
+<body>
+
+  <header>Canada Tour Packages</header>
+
+  <div class="container">
+    <div class="package" onclick="openBookingForm('Rocky Mountains Adventure')">
+      <img src="images/rockies.jpg" alt="Rocky Mountains" class="package-img">
+      <h3>Rocky Mountains Adventure</h3>
+      <p>Explore Banff, Jasper, and Lake Louise with scenic mountain views and wildlife.</p>
+    </div>
+
+    <div class="package" onclick="openBookingForm('City Explorer Tour')">
+      <img src="images/canada-cities.jpg" alt="City Explorer" class="package-img">
+      <h3>City Explorer Tour</h3>
+      <p>Discover Toronto, Vancouver, and Montreal's vibrant culture, food, and landmarks.</p>
+    </div>
+
+    <div class="package" onclick="openBookingForm('Northern Lights Escape')">
+      <img src="images/northern-lights.jpg" alt="Northern Lights" class="package-img">
+      <h3>Northern Lights Escape</h3>
+      <p>Witness the magical aurora borealis in Yukon and Northwest Territories.</p>
+    </div>
+
+    <div id="bookingForm">
+      <h2>Confirm Your Booking</h2>
+      <div id="priceDisplay"></div>
+      <form onsubmit="submitBooking(event)">
+        <input type="text" id="userName" placeholder="Your Name" required>
+        <input type="email" id="userEmail" placeholder="Email" required>
+        <input type="text" id="userPhone" placeholder="Phone Number" required>
+        <input type="text" id="userAddress" placeholder="Address" required>
+        <select id="travellerType" required>
+          <option value="">Traveller Type</option>
+          <option value="Solo">Solo</option>
+          <option value="Couple">Couple</option>
+          <option value="Family">Family</option>
+          <option value="Friends">Friends</option>
+        </select>
+        <input type="number" id="travellerCount" placeholder="Number of Travellers" required>
+        <button type="submit">Confirm Booking</button>
+      </form>
+    </div>
+  </div>
+
+  <script>
+    let selectedPackage = '';
+    let selectedPrice = 0;
+
+    const prices = {
+      'Rocky Mountains Adventure': 2400,
+      'City Explorer Tour': 2000,
+      'Northern Lights Escape': 2700
+    };
+
+    function openBookingForm(packageName) {
+      selectedPackage = packageName;
+      selectedPrice = prices[packageName];
+      document.getElementById("priceDisplay").innerText = `Package: ${packageName} | Price per person: $${selectedPrice}`;
+      document.getElementById("bookingForm").style.display = "block";
+      window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
+    }
+
+    async function submitBooking(event) {
+      event.preventDefault();
+
+      const name = document.getElementById("userName").value;
+      const email = document.getElementById("userEmail").value;
+      const phone = document.getElementById("userPhone").value;
+      const address = document.getElementById("userAddress").value;
+      const type = document.getElementById("travellerType").value;
+      const count = parseInt(document.getElementById("travellerCount").value);
+      const total = count * selectedPrice;
+
+      const { jsPDF } = window.jspdf;
+      const doc = new jsPDF();
+
+      doc.setFontSize(16);
+      doc.text("Canada Tour Booking Confirmation", 20, 20);
+      doc.setFontSize(12);
+      doc.text(`Name: ${name}`, 20, 40);
+      doc.text(`Email: ${email}`, 20, 50);
+      doc.text(`Phone: ${phone}`, 20, 60);
+      doc.text(`Address: ${address}`, 20, 70);
+      doc.text(`Traveller Type: ${type}`, 20, 80);
+      doc.text(`Number of Travellers: ${count}`, 20, 90);
+      doc.text(`Package: ${selectedPackage}`, 20, 100);
+      doc.text(`Total Price: $${total}`, 20, 110);
+      doc.text("Thank you for booking with us. Enjoy your Canadian journey!", 20, 130);
+
+      doc.save("Canada_Booking_Confirmation.pdf");
+
+      alert("Booking confirmed and PDF downloaded!");
+    }
+  </script>
+
+</body>
+</html>

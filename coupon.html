@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Get Coupon - Trail Bliss</title>
+    <link rel="stylesheet" href="footer_styling.css">
+</head>
+<body>
+    <div class="coupon-container">
+        <h1>Unlock Your Travel Savings!</h1>
+        <p>Enter your email below to receive exclusive coupons and deals.</p>
+        <form class="coupon-form">
+            <input type="email" placeholder="Your Email Address">
+            <button type="submit" class="button">Get My Coupon</button>
+        </form>
+        <div class="coupon-code hidden">
+            <h2>Your Exclusive Coupon Code:</h2>
+            <p class="code">BLISS20OFF</p>
+            <p>Use this code at checkout!</p>
+        </div>
+        <p class="back-link"><a href="index.html">Back to Homepage</a></p>
+    </div>
+    <script>
+        document.querySelector('.coupon-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            document.querySelector('.coupon-code').classList.remove('hidden');
+            this.style.display = 'none'; // Hide the form after submission (for simplicity)
+        });
+    </script>
+</body>
+</html>

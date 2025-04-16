@@ -802,4 +802,9 @@ ul.menu {
 .blog-post a:hover {
   background: #d18d00;
 }
-
+a {
+  color: white;
+}
+a:hover {
+  color: #FFD700;
+}

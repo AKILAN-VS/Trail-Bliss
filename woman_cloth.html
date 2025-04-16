@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Woman's Clothing - Trail Bliss</title>
+    <link rel="stylesheet" href="footer_styling2.css">
+</head>
+<body>
+    <div class="product-category-container">
+        <h1>Women's Clothing</h1>
+        <p>Explore our latest collection of stylish and comfortable women's apparel for your travel adventures.</p>
+        <section class="product-grid">
+            <div class="product-item">
+                <img src="placeholder_woman1.jpg" alt="Travel Dress">
+                <h3>Lightweight Travel Dress</h3>
+                <p>$75.00</p>
+                <a href="#" class="button">View Details</a>
+            </div>
+            <div class="product-item">
+                <img src="placeholder_woman2.jpg" alt="Hiking Pants">
+                <h3>Durable Hiking Pants</h3>
+                <p>$60.00</p>
+                <a href="#" class="button">View Details</a>
+            </div>
+             <div class="product-item">
+                <img src="placeholder_woman3.jpg" alt="Travel Jacket">
+                <h3>Waterproof Travel Jacket</h3>
+                <p>$100.00</p>
+                <a href="#" class="button">View Details</a>
+            </div>
+        </section>
+        <p class="back-link"><a href="index.html">Back to Homepage</a></p>
+    </div>
+    <script>
+      //Basic script to add interactivity
+      const productItems = document.querySelectorAll('.product-item');
+
+      productItems.forEach(item => {
+        item.addEventListener('mouseenter', () => {
+          item.style.transform = 'scale(1.05)';
+          item.style.boxShadow = '0 4px 10px rgba(0,0,0,0.2)';
+        });
+        item.addEventListener('mouseleave', () => {
+          item.style.transform = 'scale(1)';
+          item.style.boxShadow = 'none';
+        });
+      });
+    </script>
+</body>
+</html>
