@@ -145,6 +145,8 @@
         </select>
         <input type="number" id="travellerCount" placeholder="Number of Travellers" required>
         <button type="submit">Confirm Booking</button>
+        <button type="button" onclick="store(event)">Confirm Booking</button>
+        <button type="button" onclick="store(event)">Save Booking</button>
       </form>
     </div>
   </div>
@@ -166,10 +168,10 @@
       document.getElementById("bookingForm").style.display = "block";
       window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
     }
-
+    
     async function submitBooking(event) {
       event.preventDefault();
-
+      
       const name = document.getElementById("userName").value;
       const email = document.getElementById("userEmail").value;
       const phone = document.getElementById("userPhone").value;
@@ -177,10 +179,10 @@
       const type = document.getElementById("travellerType").value;
       const count = parseInt(document.getElementById("travellerCount").value);
       const total = count * selectedPrice;
-
+      
       const { jsPDF } = window.jspdf;
       const doc = new jsPDF();
-
+      
       doc.setFontSize(16);
       doc.text("Canada Tour Booking Confirmation", 20, 20);
       doc.setFontSize(12);
@@ -193,10 +195,45 @@
       doc.text(`Package: ${selectedPackage}`, 20, 100);
       doc.text(`Total Price: $${total}`, 20, 110);
       doc.text("Thank you for booking with us. Enjoy your Canadian journey!", 20, 130);
-
+      
       doc.save("Canada_Booking_Confirmation.pdf");
-
+      
       alert("Booking confirmed and PDF downloaded!");
+    }
+    function storeToLocalCart(packageName, name, count) {
+      const existingCart = JSON.parse(localStorage.getItem("cart")) || [];
+      existingCart.push({ package: packageName, name, count});
+      localStorage.setItem("cart", JSON.stringify(existingCart));
+    }
+    async function store(event) {
+      event.preventDefault();
+
+      const x = document.getElementById("userName").value;
+      const y = document.getElementById("userEmail").value;
+      const z = document.getElementById("userPhone").value;
+      const a = document.getElementById("userAddress").value;
+      const b = document.getElementById("travellerType").value;
+      const c = document.getElementById("travellerCount").value;
+      //const total = selectedPrice * parseInt(c);
+
+      storeToLocalCart(selectedPackage, x, c);
+
+      try {
+        const response = await fetch('http://localhost:3000/api/bookings/', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ x, y, z, a, b, c }),
+        });
+
+        if (response.status === 201) {
+          console.log("✅ Booking saved.");
+          alert("Booking stored in the system.");
+        } else {
+          console.error("❌ Booking save failed. Status:", response.status);
+        }
+      } catch (error) {
+        console.error('Error:', error);
+      }
     }
   </script>
 

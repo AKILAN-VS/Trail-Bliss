@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Ultimate Guide to Exploring Paris</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Poppins', sans-serif;
+      background: linear-gradient(to right, #ffe9ec, #f8e1f4);
+      color: #333;
+      overflow-x: hidden;
+    }
+
+    header {
+      background: url('paris.jpg') center/cover no-repeat;
+      height: 60vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+    }
+
+    header::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.4);
+    }
+
+    header h1 {
+      position: relative;
+      color: white;
+      font-size: 3rem;
+      text-shadow: 0 4px 12px rgba(0,0,0,0.6);
+      z-index: 1;
+    }
+
+    .content {
+      max-width: 900px;
+      margin: 3rem auto;
+      padding: 2rem;
+      border-radius: 20px;
+      background: rgba(255, 255, 255, 0.85);
+      box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+      backdrop-filter: blur(10px);
+      animation: fadeIn 1s ease-out;
+    }
+
+    .content h2 {
+      color: #c0392b;
+      margin-bottom: 1rem;
+    }
+
+    .content p {
+      line-height: 1.8;
+      margin-bottom: 1rem;
+      font-size: 1.1rem;
+    }
+
+    .back-btn {
+      display: inline-block;
+      margin-top: 2rem;
+      padding: 0.8rem 1.5rem;
+      border: none;
+      background-color: #c0392b;
+      color: white;
+      border-radius: 12px;
+      text-decoration: none;
+      font-weight: bold;
+      box-shadow: 0 4px 16px rgba(192, 57, 43, 0.4);
+      transition: all 0.3s ease;
+    }
+
+    .back-btn:hover {
+      background-color: #a93226;
+      transform: translateY(-2px);
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(30px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+  </style>
+</head>
+<body>
+
+  <header style="background-image: url(parisexp3.jpg);">
+    <h1>Ultimate Guide to Exploring Paris</h1>
+  </header>
+
+  <div class="content">
+    <h2>Experience the Romance of Paris</h2>
+    <p>Paris is not just a destination—it's an emotion. Whether you're strolling down the Champs-Élysées or sipping coffee at a Montmartre café, the city seduces with every step.</p>
+
+    <h2>Must-Visit Spots</h2>
+    <p>✔️ Eiffel Tower<br>
+       ✔️ Louvre Museum<br>
+       ✔️ Notre-Dame Cathedral<br>
+       ✔️ Seine River Cruise</p>
+
+    <h2>Local Tips</h2>
+    <p>✨ Travel off-season (spring or fall) for fewer crowds.<br>
+       ✨ Learn a few French phrases to charm the locals.<br>
+       ✨ Skip taxis—explore with Metro or by foot.</p>
+  </div>
+
+</body>
+</html>

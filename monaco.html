@@ -145,6 +145,7 @@
         </select>
         <input type="number" id="travellerCount" placeholder="Number of Travellers" required>
         <button type="submit">Confirm Booking</button>
+        <button type="button" onclick="store(event)">Save Booking</button>
       </form>
     </div>
   </div>
@@ -189,6 +190,41 @@
       pdf.save(`Monaco_Tour_Confirmation_${name}.pdf`);
       
       alert(`Booking confirmed!\n\nName: ${name}\nEmail: ${email}\nPhone: ${phone}\nAddress: ${address}\nTraveller Type: ${travellerType}\nTravellers: ${count}\nTotal Amount: $${total}\n\n✨ Thank you for choosing our Monaco tour!`);
+    }
+    function storeToLocalCart(packageName, name, count) {
+      const existingCart = JSON.parse(localStorage.getItem("cart")) || [];
+      existingCart.push({ package: packageName, name, count});
+      localStorage.setItem("cart", JSON.stringify(existingCart));
+    }
+    async function store(event) {
+      event.preventDefault();
+
+      const x = document.getElementById("userName").value;
+      const y = document.getElementById("userEmail").value;
+      const z = document.getElementById("userPhone").value;
+      const a = document.getElementById("userAddress").value;
+      const b = document.getElementById("travellerType").value;
+      const c = document.getElementById("travellerCount").value;
+      //const total = selectedPrice * parseInt(c);
+
+      storeToLocalCart(selectedPackage, x, c);
+
+      try {
+        const response = await fetch('http://localhost:3000/api/bookings/', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ x, y, z, a, b, c }),
+        });
+
+        if (response.status === 201) {
+          console.log("✅ Booking saved.");
+          alert("Booking stored in the system.");
+        } else {
+          console.error("❌ Booking save failed. Status:", response.status);
+        }
+      } catch (error) {
+        console.error('Error:', error);
+      }
     }
   </script>
 

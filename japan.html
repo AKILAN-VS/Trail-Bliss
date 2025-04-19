@@ -1,8 +1,9 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
+  <meta charset="UTF-8" />
   <title>Japan Tour Packages</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
   <style>
     body {
       margin: 0;
@@ -10,7 +11,6 @@
       background: linear-gradient(to right, #ffecd2, #fcb69f);
       color: #333;
     }
-
     header {
       padding: 2rem;
       text-align: center;
@@ -20,13 +20,11 @@
       font-weight: bold;
       letter-spacing: 1px;
     }
-
     .container {
       max-width: 1000px;
       margin: 2rem auto;
       padding: 0 1rem;
     }
-
     .package {
       background: white;
       border-radius: 20px;
@@ -36,16 +34,25 @@
       cursor: pointer;
       transition: transform 0.2s ease;
     }
-
     .package:hover {
       transform: scale(1.02);
     }
-
     .package h3 {
-      margin-top: 0;
+      margin-top: 0.5rem;
       color: #ff6b6b;
     }
-
+    .package-img {
+      width: 100%;
+      height: 200px;
+      object-fit: cover;
+      border-radius: 15px;
+      margin-bottom: 1rem;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+      transition: transform 0.3s ease;
+    }
+    .package:hover .package-img {
+      transform: scale(1.02);
+    }
     #bookingForm {
       display: none;
       background: white;
@@ -54,8 +61,7 @@
       box-shadow: 0 6px 18px rgba(0, 0, 0, 0.15);
       margin-top: 2rem;
     }
-
-    #bookingForm input, #bookingForm button {
+    #bookingForm input, #bookingForm button, #bookingForm select {
       width: 100%;
       padding: 0.8rem;
       margin-top: 1rem;
@@ -63,13 +69,11 @@
       border: 1px solid #ccc;
       font-size: 1rem;
     }
-
-    #bookingForm input:focus {
+    #bookingForm input:focus, #bookingForm select:focus {
       outline: none;
       border-color: #ff6b6b;
       box-shadow: 0 0 0 2px rgba(255, 107, 107, 0.2);
     }
-
     #bookingForm button {
       background-color: #ff6b6b;
       color: white;
@@ -77,9 +81,14 @@
       cursor: pointer;
       font-weight: bold;
     }
-
     #bookingForm button:hover {
       background-color: #e85d5d;
+    }
+    #priceDisplay {
+      margin-top: 1rem;
+      font-weight: bold;
+      font-size: 1.1rem;
+      color: #444;
     }
   </style>
 </head>
@@ -89,40 +98,124 @@
 
   <div class="container">
     <div class="package" onclick="openBookingForm('Cherry Blossom Tour')">
+      <img src="images/cherry-blossom.jpg" alt="Cherry Blossom" class="package-img" />
       <h3>Cherry Blossom Tour</h3>
       <p>Explore Tokyo, Kyoto, and Mount Fuji during the breathtaking sakura season.</p>
     </div>
 
     <div class="package" onclick="openBookingForm('Cultural Heritage Tour')">
+      <img src="images/cultural-heritage.jpg" alt="Cultural Heritage" class="package-img" />
       <h3>Cultural Heritage Tour</h3>
       <p>Discover temples, tea ceremonies, and traditional arts in Kyoto and Nara.</p>
     </div>
 
     <div class="package" onclick="openBookingForm('Tokyo Tech Adventure')">
+      <img src="images/tokyo-tech.jpg" alt="Tokyo Tech" class="package-img" />
       <h3>Tokyo Tech Adventure</h3>
       <p>Experience Akihabara, Shibuya, and cutting-edge innovations in Japan’s capital.</p>
     </div>
 
     <div id="bookingForm">
       <h2>Confirm Your Booking</h2>
+      <div id="priceDisplay"></div>
       <form onsubmit="submitBooking(event)">
-        <input type="text" placeholder="Your Name" required>
-        <input type="email" placeholder="Email" required>
-        <input type="number" placeholder="Number of Travellers" required>
+        <input type="text" id="userName" placeholder="Your Name" required />
+        <input type="email" id="userEmail" placeholder="Email" required />
+        <input type="tel" id="userPhone" placeholder="Phone Number" required />
+        <input type="number" id="travellerCount" placeholder="Number of Travellers" required />
+        <select id="paymentMethod" required>
+          <option value="">Select Payment Method</option>
+          <option value="Credit Card">Credit Card</option>
+          <option value="UPI">UPI</option>
+          <option value="Net Banking">Net Banking</option>
+        </select>
         <button type="submit">Confirm Booking</button>
+        <button type="button" onclick="store(event)">Save Booking</button>
       </form>
     </div>
   </div>
 
   <script>
+    let selectedPackage = '';
+    let selectedPrice = 0;
+
+    const prices = {
+      'Cherry Blossom Tour': 2500,
+      'Cultural Heritage Tour': 1800,
+      'Tokyo Tech Adventure': 2200
+    };
+
     function openBookingForm(packageName) {
+      selectedPackage = packageName;
+      selectedPrice = prices[packageName];
+      document.getElementById("priceDisplay").innerText = `Package: ${packageName} | Price per person: $${selectedPrice}`;
       document.getElementById("bookingForm").style.display = "block";
       window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
     }
 
-    function submitBooking(event) {
+    async function submitBooking(event) {
       event.preventDefault();
-      alert("Booking confirmed! ✈️ Arigatou Gozaimasu!");
+      const name = document.getElementById("userName").value;
+      const email = document.getElementById("userEmail").value;
+      const phone = document.getElementById("userPhone").value;
+      const count = parseInt(document.getElementById("travellerCount").value);
+      const payment = document.getElementById("paymentMethod").value;
+      const total = selectedPrice * count;
+
+      const receipt = `
+        Booking Receipt - Japan Tour 🇯🇵
+
+        Name: ${name}
+        Email: ${email}
+        Phone: ${phone}
+        Package: ${selectedPackage}
+        Travellers: ${count}
+        Payment: ${payment}
+        Total Amount: $${total}
+      `;
+
+      alert("Booking confirmed! PDF receipt is being generated...");
+
+      const { jsPDF } = window.jspdf;
+      const doc = new jsPDF();
+      doc.setFontSize(14);
+      doc.text(receipt, 10, 20);
+      doc.save(`${selectedPackage.replace(/\s+/g, '_')}_Booking_Receipt.pdf`);
+    }
+    function storeToLocalCart(packageName, name, count) {
+      const existingCart = JSON.parse(localStorage.getItem("cart")) || [];
+      existingCart.push({ package: packageName, name, count});
+      localStorage.setItem("cart", JSON.stringify(existingCart));
+    }
+    async function store(event) {
+      event.preventDefault();
+
+      const x = document.getElementById("userName").value;
+      const y = document.getElementById("userEmail").value;
+      const z = document.getElementById("userPhone").value;
+      const a = document.getElementById("userAddress").value;
+      const b = document.getElementById("travellerType").value;
+      const c = document.getElementById("travellerCount").value;
+      //const total = selectedPrice * parseInt(c);
+
+      storeToLocalCart(selectedPackage, x, c);
+
+      try {
+        const response = await fetch('http://localhost:3000/api/bookings/', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ x, y, z, a, b, c }),
+        });
+
+        if (response.status === 201) {
+          console.log("✅ Booking saved.");
+          alert("Booking stored in the system.");
+        } else {
+          console.error("❌ Booking save failed. Status:", response.status);
+        }
+      } catch (error) {
+        console.error('Error:', error);
+      }
     }
   </script>
 

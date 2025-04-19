@@ -111,27 +111,27 @@
 
   <div class="container">
     <div class="package" onclick="openBookingForm('Historic Landmarks Tour')">
-      <img src="images/london-landmarks.jpg" alt="Historic Landmarks" class="package-img">
+      <img src="london.jpg" alt="Historic Landmarks" class="package-img">
       <h3>Historic Landmarks Tour</h3>
       <p>Visit the Tower of London, Buckingham Palace, and Westminster Abbey.</p>
     </div>
 
     <div class="package" onclick="openBookingForm('Modern London Experience')">
-      <img src="images/modern-london.jpg" alt="Modern London" class="package-img">
+      <img src="london2.jpg" alt="Modern London" class="package-img">
       <h3>Modern London Experience</h3>
       <p>Explore the London Eye, The Shard, and vibrant Soho nightlife.</p>
     </div>
 
     <div class="package" onclick="openBookingForm('Cultural Immersion Tour')">
-      <img src="images/london-culture.jpg" alt="Cultural Immersion" class="package-img">
+      <img src="london3.jpg" alt="Cultural Immersion" class="package-img">
       <h3>Cultural Immersion Tour</h3>
       <p>Experience British culture through museums, theaters, and local cuisine.</p>
     </div>
 
     <div id="bookingForm">
-      <h2>Confirm Your Booking</h2>
+      <h2>Confirm Your Booking</h2><p id="destination">London</p>
       <div id="priceDisplay"></div>
-      <form onsubmit="submitBooking(event)">
+      <form>
         <input type="text" id="userName" placeholder="Your Name" required>
         <input type="email" id="userEmail" placeholder="Email" required>
         <input type="text" id="userPhone" placeholder="Phone Number" required>
@@ -144,7 +144,8 @@
           <option value="Friends">Friends</option>
         </select>
         <input type="number" id="travellerCount" placeholder="Number of Travellers" required>
-        <button type="submit">Confirm Booking</button>
+        <button type="button" onclick="submitBooking(event)">Download Receipt</button>
+        <button type="button" onclick="store(event)">Confirm Booking</button>
       </form>
     </div>
   </div>
@@ -197,30 +198,41 @@
       doc.save("London_Booking_Confirmation.pdf");
 
       alert("Booking confirmed and PDF downloaded!");
+      storeToLocalCart(selectedPackage, name, count, total);
     }
-    async function store() {
-      const x=document.getElementById("userName");
-      const y=document.getElementById("userEmail");
-      const z=document.getElementById("userPhone");
-      const a=document.getElementById("userAddress");
-      const b=document.getElementById("travellerType");
-      const c=document.getElementById("travellerCount");
-      try{
-        let response = await fetch('http://localhost:3000/api/bookings',{
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-                x,
-                y,
-                x,
-                a,
-                b,
-                c
-            }),
+
+    function storeToLocalCart(packageName, name, count) {
+      const existingCart = JSON.parse(localStorage.getItem("cart")) || [];
+      existingCart.push({ package: packageName, name, count});
+      localStorage.setItem("cart", JSON.stringify(existingCart));
+    }
+
+    async function store(event) {
+      event.preventDefault();
+
+      const x = document.getElementById("userName").value;
+      const y = document.getElementById("userEmail").value;
+      const z = document.getElementById("userPhone").value;
+      const a = document.getElementById("userAddress").value;
+      const b = document.getElementById("travellerType").value;
+      const c = document.getElementById("travellerCount").value;
+
+      storeToLocalCart(selectedPackage, x, c);
+
+      try {
+        const response = await fetch('http://localhost:3000/api/bookings/', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ x, y, z, a, b, c }),
         });
-      }catch (error) {
+
+        if (response.status === 201) {
+          console.log("✅ Booking saved.");
+          alert("Booking stored in the system.");
+        } else {
+          console.error("❌ Booking save failed. Status:", response.status);
+        }
+      } catch (error) {
         console.error('Error:', error);
       }
     }

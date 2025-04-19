@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Budget vs. Luxury Travel</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Poppins', sans-serif;
+      background: linear-gradient(to right, #e3ffe7, #d9e7ff);
+      color: #2c3e50;
+    }
+
+    header {
+      background: url('budget.jpg') center/cover no-repeat;
+      height: 60vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+    }
+
+    header::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.45);
+    }
+
+    header h1 {
+      position: relative;
+      color: white;
+      font-size: 3rem;
+      z-index: 1;
+      text-shadow: 0 4px 12px rgba(0, 0, 0, 0.6);
+    }
+
+    .content {
+      max-width: 900px;
+      margin: 3rem auto;
+      padding: 2rem;
+      background: rgba(255, 255, 255, 0.85);
+      border-radius: 20px;
+      backdrop-filter: blur(10px);
+      box-shadow: 0 8px 30px rgba(0, 0, 0, 0.1);
+      animation: fadeIn 1s ease-out;
+    }
+
+    .content h2 {
+      color: #16a085;
+    }
+
+    .content p {
+      line-height: 1.8;
+      font-size: 1.1rem;
+      margin-bottom: 1rem;
+    }
+
+    .back-btn {
+      display: inline-block;
+      margin-top: 2rem;
+      padding: 0.8rem 1.5rem;
+      background: #16a085;
+      color: white;
+      border-radius: 12px;
+      text-decoration: none;
+      font-weight: bold;
+      box-shadow: 0 4px 16px rgba(22, 160, 133, 0.4);
+      transition: all 0.3s ease;
+    }
+
+    .back-btn:hover {
+      background: #138d75;
+      transform: translateY(-2px);
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(30px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <h1>Budget vs. Luxury Travel</h1>
+  </header>
+
+  <div class="content">
+    <h2>Pick Your Style</h2>
+    <p>Are you a frugal explorer or a lavish jet-setter? Travel isn't one-size-fits-all, and both styles have their own charm.</p>
+
+    <h2>Budget Travel</h2>
+    <p>💸 Hostels, street food, and hidden gems.<br>
+       💡 Focus on cultural depth over extravagance.<br>
+       ✈️ Travel longer with less.</p>
+
+    <h2>Luxury Travel</h2>
+    <p>🛎️ 5-star resorts, private tours, Michelin stars.<br>
+       🧘‍♂️ Maximum comfort and exclusivity.<br>
+       💼 Ideal for short, high-impact experiences.</p>
+
+    
+  </div>
+
+</body>
+</html>

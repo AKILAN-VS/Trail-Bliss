@@ -8,23 +8,26 @@
     body {
       margin: 0;
       font-family: 'Segoe UI', sans-serif;
-      background: linear-gradient(to right, #a1c4fd, #c2e9fb);
+      background: linear-gradient(to right, #e0f7fa, #c8e6c9);
       color: #333;
     }
+
     header {
       padding: 2rem;
       text-align: center;
-      background: #00796b;
+      background: #43a047;
       color: white;
       font-size: 2rem;
       font-weight: bold;
       letter-spacing: 1px;
     }
+
     .container {
       max-width: 1000px;
       margin: 2rem auto;
       padding: 0 1rem;
     }
+
     .package {
       background: white;
       border-radius: 20px;
@@ -34,13 +37,16 @@
       cursor: pointer;
       transition: transform 0.2s ease;
     }
+
     .package:hover {
       transform: scale(1.02);
     }
+
     .package h3 {
       margin-top: 0.5rem;
-      color: #00796b;
+      color: #43a047;
     }
+
     .package-img {
       width: 100%;
       height: 200px;
@@ -50,9 +56,11 @@
       box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
       transition: transform 0.3s ease;
     }
+
     .package:hover .package-img {
       transform: scale(1.02);
     }
+
     #bookingForm {
       display: none;
       background: white;
@@ -61,6 +69,7 @@
       box-shadow: 0 6px 18px rgba(0, 0, 0, 0.15);
       margin-top: 2rem;
     }
+
     #bookingForm input, #bookingForm select, #bookingForm button {
       width: 100%;
       padding: 0.8rem;
@@ -69,21 +78,25 @@
       border: 1px solid #ccc;
       font-size: 1rem;
     }
-    #bookingForm input:focus {
+
+    #bookingForm input:focus, #bookingForm select:focus {
       outline: none;
-      border-color: #00796b;
-      box-shadow: 0 0 0 2px rgba(0, 121, 107, 0.2);
+      border-color: #43a047;
+      box-shadow: 0 0 0 2px rgba(67, 160, 71, 0.2);
     }
+
     #bookingForm button {
-      background-color: #00796b;
+      background-color: #43a047;
       color: white;
       border: none;
       cursor: pointer;
       font-weight: bold;
     }
+
     #bookingForm button:hover {
-      background-color: #005f56;
+      background-color: #388e3c;
     }
+
     #priceDisplay {
       margin-top: 1rem;
       font-weight: bold;
@@ -97,35 +110,42 @@
   <header>Switzerland Tour Packages</header>
 
   <div class="container">
-    <div class="package" onclick="openBookingForm('Alpine Adventure')">
-      <img src="images/switzerland-alps.jpg" alt="Alps" class="package-img">
-      <h3>Alpine Adventure</h3>
-      <p>Ski in the Swiss Alps, enjoy hot cocoa, and breathtaking snowy peaks.</p>
+    <div class="package" onclick="openBookingForm('Alpine Wonders')">
+      <img src="images/alps.jpg" alt="Alps" class="package-img">
+      <h3>Alpine Wonders</h3>
+      <p>Explore Zermatt, Jungfrau, and the scenic Bernese Oberland.</p>
     </div>
 
-    <div class="package" onclick="openBookingForm('Lucerne and Lake Tour')">
-      <img src="images/switzerland-lucerne.jpg" alt="Lucerne" class="package-img">
-      <h3>Lucerne and Lake Tour</h3>
-      <p>Discover medieval architecture, scenic lakes, and charming villages.</p>
+    <div class="package" onclick="openBookingForm('Lucerne & Lakeside Magic')">
+      <img src="images/lucerne.jpg" alt="Lucerne" class="package-img">
+      <h3>Lucerne & Lakeside Magic</h3>
+      <p>Discover Lucerne, Lake Geneva, and tranquil villages by the water.</p>
     </div>
 
-    <div class="package" onclick="openBookingForm('Chocolate and Cheese Trail')">
-      <img src="images/switzerland-food.jpg" alt="Food" class="package-img">
-      <h3>Chocolate and Cheese Trail</h3>
-      <p>Taste authentic Swiss cheese and chocolate across scenic routes.</p>
+    <div class="package" onclick="openBookingForm('Swiss Chocolate & Culture')">
+      <img src="images/chocolate.jpg" alt="Chocolate" class="package-img">
+      <h3>Swiss Chocolate & Culture</h3>
+      <p>Visit Zurich, Bern, and famous Swiss chocolate factories and museums.</p>
     </div>
 
     <div id="bookingForm">
       <h2>Confirm Your Booking</h2>
       <div id="priceDisplay"></div>
-      <form id="bookingFormId" onsubmit="submitBooking(event)">
+      <form onsubmit="submitBooking(event)">
         <input type="text" id="userName" placeholder="Your Name" required>
         <input type="email" id="userEmail" placeholder="Email" required>
+        <input type="text" id="userPhone" placeholder="Phone Number" required>
+        <input type="text" id="userAddress" placeholder="Address" required>
+        <select id="travellerType" required>
+          <option value="">Traveller Type</option>
+          <option value="Solo">Solo</option>
+          <option value="Couple">Couple</option>
+          <option value="Family">Family</option>
+          <option value="Friends">Friends</option>
+        </select>
         <input type="number" id="travellerCount" placeholder="Number of Travellers" required>
-        <input type="text" id="destination" placeholder="Destination City (e.g., Zurich)" required>
-        <input type="date" id="departureDate" placeholder="Departure Date" required>
-        <textarea id="specialRequests" placeholder="Any Special Requests?" rows="4"></textarea>
         <button type="submit">Confirm Booking</button>
+        <button type="button" onclick="store(event)">Save Booking</button>
       </form>
     </div>
   </div>
@@ -135,9 +155,9 @@
     let selectedPrice = 0;
 
     const prices = {
-      'Alpine Adventure': 5500,
-      'Lucerne and Lake Tour': 4800,
-      'Chocolate and Cheese Trail': 3900
+      'Alpine Wonders': 2800,
+      'Lucerne & Lakeside Magic': 2300,
+      'Swiss Chocolate & Culture': 2100
     };
 
     function openBookingForm(packageName) {
@@ -150,60 +170,69 @@
 
     async function submitBooking(event) {
       event.preventDefault();
+
       const name = document.getElementById("userName").value;
       const email = document.getElementById("userEmail").value;
+      const phone = document.getElementById("userPhone").value;
+      const address = document.getElementById("userAddress").value;
+      const type = document.getElementById("travellerType").value;
       const count = parseInt(document.getElementById("travellerCount").value);
-      const destination = document.getElementById("destination").value;
-      const departureDate = document.getElementById("departureDate").value;
-      const specialRequests = document.getElementById("specialRequests").value;
       const total = count * selectedPrice;
-
-      alert(`Booking confirmed!\n\nName: ${name}\nEmail: ${email}\nPackage: ${selectedPackage}\nTravellers: ${count}\nDestination: ${destination}\nDeparture Date: ${departureDate}\nSpecial Requests: ${specialRequests}\nTotal Amount: $${total}\n\n🇨🇭 Danke for booking your Swiss adventure with us!`);
 
       const { jsPDF } = window.jspdf;
       const doc = new jsPDF();
 
-      // Title
-      doc.setFont("times", "italic");
-      doc.setFontSize(30);
-      doc.setTextColor(0, 121, 107);
-      doc.text("Swiss Getaway", 105, 25, { align: "center" });
+      doc.setFontSize(16);
+      doc.text("Switzerland Tour Booking Confirmation", 20, 20);
+      doc.setFontSize(12);
+      doc.text(`Name: ${name}`, 20, 40);
+      doc.text(`Email: ${email}`, 20, 50);
+      doc.text(`Phone: ${phone}`, 20, 60);
+      doc.text(`Address: ${address}`, 20, 70);
+      doc.text(`Traveller Type: ${type}`, 20, 80);
+      doc.text(`Number of Travellers: ${count}`, 20, 90);
+      doc.text(`Package: ${selectedPackage}`, 20, 100);
+      doc.text(`Total Price: $${total}`, 20, 110);
+      doc.text("Danke schön! Enjoy your Swiss escape!", 20, 130);
 
-      doc.setDrawColor(100);
-      doc.setLineWidth(0.5);
-      doc.line(20, 30, 190, 30);
+      doc.save("Switzerland_Booking_Confirmation.pdf");
 
-      doc.setFont("helvetica", "bold");
-      doc.setFontSize(14);
-      doc.setTextColor(40, 40, 40);
-      let y = 45;
-      const lh = 10;
+      alert("Booking confirmed and PDF downloaded!");
+    }
+    function storeToLocalCart(packageName, name, count) {
+      const existingCart = JSON.parse(localStorage.getItem("cart")) || [];
+      existingCart.push({ package: packageName, name, count});
+      localStorage.setItem("cart", JSON.stringify(existingCart));
+    }
+    async function store(event) {
+      event.preventDefault();
 
-      doc.text(`📦 Package: ${selectedPackage}`, 20, y); y += lh;
-      doc.text(`👤 Name: ${name}`, 20, y); y += lh;
-      doc.text(`📧 Email: ${email}`, 20, y); y += lh;
-      doc.text(`🧳 Travellers: ${count}`, 20, y); y += lh;
-      doc.text(`🌍 Destination: ${destination}`, 20, y); y += lh;
-      doc.text(`📅 Departure Date: ${departureDate}`, 20, y); y += lh;
-      doc.text(`💵 Price per person: $${selectedPrice}`, 20, y); y += lh;
-      doc.text(`💰 Total Amount: $${total}`, 20, y); y += lh;
+      const x = document.getElementById("userName").value;
+      const y = document.getElementById("userEmail").value;
+      const z = document.getElementById("userPhone").value;
+      const a = document.getElementById("userAddress").value;
+      const b = document.getElementById("travellerType").value;
+      const c = document.getElementById("travellerCount").value;
+      //const total = selectedPrice * parseInt(c);
 
-      if (specialRequests) {
-        doc.text(`✏️ Special Requests: ${specialRequests}`, 20, y); y += lh;
+      storeToLocalCart(selectedPackage, x, c);
+
+      try {
+        const response = await fetch('http://localhost:3000/api/bookings/', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ x, y, z, a, b, c }),
+        });
+
+        if (response.status === 201) {
+          console.log("✅ Booking saved.");
+          alert("Booking stored in the system.");
+        } else {
+          console.error("❌ Booking save failed. Status:", response.status);
+        }
+      } catch (error) {
+        console.error('Error:', error);
       }
-
-      y += 20;
-      if (y > 280) {
-        doc.addPage();
-        y = 30;
-      }
-
-      doc.setFont("courier", "italic");
-      doc.setFontSize(13);
-      doc.setTextColor(80, 80, 80);
-      doc.text("🌟 Danke for booking your Swiss adventure with us!", 105, y, { align: "center" });
-
-      doc.save(`SwissTourBooking_${selectedPackage.replace(/\s+/g, '_')}.pdf`);
     }
   </script>
 

@@ -7,39 +7,188 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="stylesheet" href="style.css" />
     <title>Trail Bliss</title>
-    <script>
-        document.addEventListener("DOMContentLoaded", function () {
-        const tourCards = document.querySelectorAll(".card");
-
-        tourCards.forEach((card) => {
-            card.addEventListener("click", function () {
-                const itemName = card.querySelector("h2").innerText;
-                const itemPrice = parseFloat(card.querySelector(".cost").innerText.replace(/[^0-9.]/g, ""));
-
-                addToCart(itemName, itemPrice);
-            });
-        });
-    });
-    function checkout() {
-    if (cart.length === 0) {
-        alert("Your cart is empty!");
-        return;
-    }
-
-    let totalAmount = cart.reduce((sum, item) => sum + item.price, 0).toFixed(2);
-    alert(`Thank you for your purchase! Your total is $${totalAmount}`);
-    cart = [];
-
-    updateCart();
+    <style>
+        
+        .cart-icon {
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    background: #ffffff;
+    color: #1e1e1e;
+    width: 55px;
+    height: 55px;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    z-index: 1000;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    transition: transform 0.2s ease, background 0.3s ease;
 }
 
-document.addEventListener("DOMContentLoaded", function () {
-    document.getElementById("checkout-btn").addEventListener("click", checkout);
-});
-    </script>
+
+.cart-icon:hover {
+    transform: scale(1.08);
+    background: #f4f4f4;
+}
+
+.cart-count {
+    background: #ff4757;
+    color: white;
+}
+
+        
+        .cart-dropdown {
+            position: fixed;
+            top: 80px;
+            right: 20px;
+            background: white;
+            width: 300px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            padding: 15px;
+            z-index: 999;
+            display: none;
+        }
+        
+        .cart-dropdown.show {
+            display: block;
+        }
+        
+        .cart-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .cart-total {
+            font-weight: bold;
+            text-align: right;
+            margin-top: 10px;
+            padding-top: 10px;
+            border-top: 1px solid #eee;
+        }
+        
+        #checkout-btn {
+            width: 100%;
+            padding: 10px;
+            margin-top: 10px;
+            background: #4a90e2;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        
+        .remove-item {
+            color: #ff4757;
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-weight: bold;
+        }
+    </style>
 </head>
 
 <body>
+    <div class="cart-icon" onclick="toggleCart()">
+        🛒
+        <div class="cart-count" id="cart-count">0</div>
+    </div>
+    
+    <div class="cart-dropdown" id="cart-dropdown">
+        <h3>Your Cart</h3>
+        <div id="cart-items"></div>
+        <div class="cart-total">Total: $<span id="cart-total">0</span></div>
+        <button id="checkout-btn" onclick="checkout()">Checkout</button>
+    </div>
+
+    <script>
+        let cart = JSON.parse(localStorage.getItem('cart')) || [];
+        
+        function updateCart() {
+            document.getElementById('cart-count').textContent = cart.length;
+            
+            const cartItems = document.getElementById('cart-items');
+            cartItems.innerHTML = '';
+            
+            let total = 0;
+            
+            if (cart.length === 0) {
+                cartItems.innerHTML = '<p>Your cart is empty</p>';
+            } else {
+                cart.forEach((item, index) => {
+                    const itemElement = document.createElement('div');
+                    itemElement.className = 'cart-item';
+                    itemElement.innerHTML = `
+                        <span>${item.name}</span>
+                        <span>$${item.price}</span>
+                        <button class="remove-item" onclick="removeFromCart(${index})">×</button>
+                    `;
+                    cartItems.appendChild(itemElement);
+                    total += item.price;
+                });
+            }
+            
+            document.getElementById('cart-total').textContent = total.toFixed(2);
+            localStorage.setItem('cart', JSON.stringify(cart));
+        }
+        
+        function toggleCart() {
+            document.getElementById('cart-dropdown').classList.toggle('show');
+        }
+        
+        function addToCart(name, price) {
+            cart.push({ name, price });
+            updateCart();
+            alert(`${name} added to cart!`);
+;
+        }
+        
+        function removeFromCart(index) {
+            cart.splice(index, 1);
+            updateCart();
+        }
+        
+        function checkout() {
+            if (cart.length === 0) {
+                alert("Your cart is empty!");
+                return;
+            }
+
+            let totalAmount = cart.reduce((sum, item) => sum + item.price, 0).toFixed(2);
+            alert(`Thank you for your purchase! Your total is $${totalAmount}`);
+
+            cart = [];
+            updateCart();
+            document.getElementById('cart-dropdown').classList.remove('show');
+        }
+        
+        document.addEventListener('click', function(event) {
+            const cartIcon = document.querySelector('.cart-icon');
+            const cartDropdown = document.getElementById('cart-dropdown');
+            
+            if (!cartIcon.contains(event.target) && !cartDropdown.contains(event.target)) {
+                cartDropdown.classList.remove('show');
+            }
+        });
+        
+        document.addEventListener("DOMContentLoaded", function () {
+            updateCart();
+            
+            const tourCards = document.querySelectorAll(".card");
+            tourCards.forEach((card) => {
+                card.addEventListener("click", function () {
+                    const itemName = card.querySelector("h2").innerText;
+                    const itemPrice = parseFloat(card.querySelector(".cost").innerText.replace(/[^0-9.]/g, ""));
+                    addToCart(itemName, itemPrice);
+                });
+            });
+        });
+    </script>
+
     <script>
         function handleBooking() {
           const destination = document.getElementById("destination").value.trim().toLowerCase();
@@ -50,283 +199,647 @@ document.addEventListener("DOMContentLoaded", function () {
             return;
           }
       
-          // Redirect to a destination-specific packages page
-          // e.g., /packages/japan.html
-          window.location.href = `/packages/${destination}.html?date=${encodeURIComponent(date)}`;
+          window.location.href = `./packages/${destination}.html?date=${encodeURIComponent(date)}`;
+
         }
+    </script>
+
+    <section class="nav-bar">
+        <div class="logo">Trail Bliss</div>
+        <ul class="menu">
+            <li><a href="#">home</a></li>
+            <li><a href="#tour">tours</a></li>
+            <li><a href="#">package</a></li>
+            <li><a href="#blog">blog</a></li>
+            <li><a href="#about">about us</a></li>
+            <li><a href="contact.html">contact us</a></li>
+        </ul>
+    </section>
+    
+    <section class="banner">
+        <div class="video-container">
+            <video autoplay loop muted playsinline>
+                <source src="bgvideo2.mp4" type="video/mp4">
+                Your browser does not support the video tag.
+            </video>
+        </div>
+        <div class="banner-text-item">
+            <div class="banner-heading">
+                <h1>Your Gateway to Unforgettable Journeys</h1>
+            </div>
+            <form class="form" id="travelForm">
+                <input type="text" list="mylist" id="destination" placeholder="Where would you like to go?" required>
+                <datalist id="mylist">
+                  <option value="London">
+                  <option value="Canada">
+                  <option value="Monaco">
+                  <option value="Japan">
+                  <option value="Switzerland">
+                  <option value="Seoul">
+                </datalist>
+                
+                <input type="date" class="date" id="travelDate" required>
+                <a href="#" class="book" onclick="handleBooking()">Book</a>
+              </form>
+        </div>
+    </section>
+    
+    <section class="services">
+        <div class="service-item">
+            <img src="t4.png">
+            <h2>8000+ Our Local Guides</h2>
+        </div>
+        <div class="service-item">
+            <img src="t3.png">
+            <h2>100% Trusted Tour Agency</h2>
+        </div>
+        <div class="service-item">
+            <img src="t2.png">
+            <h2>28+ Years of Travel Experience</h2>
+        </div>
+        <div class="service-item">
+            <img src="t1.png">
+            <h2>98% Our Travelers are Happy</h2>
+        </div>
+    </section>
+    
+    <section class="places" id="tour">
+        <div class="places-text">
+            <small>FEATURED TOURS PACKAGES</small>
+            <h2>Favourite Places</h2>
+        </div>
+
+        <div class="cards">
+            <div class="card">
+                <div class="zoom-img">
+                    <div class="img-card">
+                        <img src="niagara3.jpg">
+                    </div>
+                </div>
+                <div class="text">
+                    <span class="rating">⭐⭐⭐⭐⭐</span>
+                    <h2>The Niagara Falls</h2>
+                    <p class="cost">$1870 / Per Person</p>
+                    <div class="card-box">
+                        <p class="time">🕓 2 Days</p>
+                        <p class="location">✈ Ontario-United States</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="card">
+                <div class="zoom-img">
+                    <div class="img-card">
+                        <img src="eiffel-tower.jpg">
+                    </div>
+                </div>
+                <div class="text">
+                    <span class="rating">⭐⭐⭐⭐⭐</span>
+                    <h2>Eiffel Tower</h2>
+                    <p class="cost">$1870 / Per Person</p>
+                    <div class="card-box">
+                        <p class="time">🕓 3 Days</p>
+                        <p class="location">✈ Paris, France</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="card">
+                <div class="zoom-img">
+                    <div class="img-card">
+                        <img src="sanfrancisco.jpg">
+                    </div>
+                </div>
+                <div class="text">
+                    <span class="rating">⭐⭐⭐⭐⭐</span>
+                    <h2>Golden Gate Bridge</h2>
+                    <p class="cost">$1870 / Per Person</p>
+                    <div class="card-box">
+                        <p class="time">🕓 3 Days</p>
+                        <p class="location">✈ California, United States</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="card">
+                <div class="zoom-img">
+                    <div class="img-card">
+                        <img src="tokyo.jpg">
+                    </div>
+                </div>
+                <div class="text">
+                    <span class="rating">⭐⭐⭐⭐⭐</span>
+                    <h2>Tokyo</h2>
+                    <p class="cost">$1870 / Per Person</p>
+                    <div class="card-box">
+                        <p class="time">🕓 3 Days</p>
+                        <p class="location">✈ Tokyo, Japan</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="card">
+                <div class="zoom-img">
+                    <div class="img-card">
+                        <img src="petronas.jpg">
+                    </div>
+                </div>
+                <div class="text">
+                    <span class="rating">⭐⭐⭐⭐⭐</span>
+                    <h2>Petronas Twin Towers</h2>
+                    <p class="cost">$1870 / Per Person</p>
+                    <div class="card-box">
+                        <p class="time">🕓 3 Days</p>
+                        <p class="location">✈ Kuala Lampur, Malaysia</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="card">
+                <div class="zoom-img">
+                    <div class="img-card">
+                        <img src="opera.jpg">
+                    </div>
+                </div>
+                <div class="text">
+                    <span class="rating">⭐⭐⭐⭐⭐</span>
+                    <h2>Sydney Opera House</h2>
+                    <p class="cost">$1870 / Per Person</p>
+                    <div class="card-box">
+                        <p class="time">🕓 3 Days</p>
+                        <p class="location">✈ Sydney, Australia</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <section class="about" id="about">
+        <div>
+            <img src="explore2.jpg" class="about-img2">
+        </div>
+        <div class="about-text">
+            <small>ABOUT OUR COMPANY</small>
+            <h2>Website for planning trips</h2>
+            <p>TrailBliss is a state-of-the-art travel website designed to revolutionize 
+                the way people explore the world.</p>
+
+            <label><input type="checkbox" checked>Personalized travel experiences tailored to your preferences</label>
+            <label><input type="checkbox" checked>Expert local guides ensuring authentic and memorable journeys</label>
+            <label><input type="checkbox" checked>24/7 customer support for a hassle-free travel experience</label>
+            <label><input type="checkbox" checked>Sustainable and responsible tourism practices for a better planet</label>
+            <a href="about.html">ABOUT US</a>
+        </div>
+    </section>
+    
+    <section id="blog" class="blog-section">
+        <div class="blog-header">
+          <h2>Travel Inspiration & Tips</h2>
+          <p>Explore our latest articles on travel experiences, guides, and tips.</p>
+        </div>
+      
+        <div class="blog-container">
+          <div class="blog-post">
+            <a href="blogs/paris-guide.html">
+              <img src="paris.jpg" alt="Paris Travel Guide">
+              <h3>Ultimate Guide to Exploring Paris</h3>
+              <p>Discover the must-visit places, hidden gems, and essential travel tips for an unforgettable trip to Paris.</p>
+              <span>Read More</span>
+            </a>
+          </div>
+      
+          <div class="blog-post">
+            <a href="blogs/budget-vs-luxury.html">
+              <img src="budget.jpg" alt="Budget Travel">
+              <h3>Budget vs. Luxury Travel: Which is for You?</h3>
+              <p>Should you splurge or save? Explore the pros and cons of both travel styles.</p>
+              <span>Read More</span>
+            </a>
+          </div>
+      
+          <div class="blog-post">
+            <a href="blogs/adventure-destinations.html">
+              <img src="adventure.jpg" alt="Adventure Travel">
+              <h3>Top 5 Destinations for Thrill-Seekers</h3>
+              <p>From skydiving in Dubai to scuba diving in the Great Barrier Reef – adventure awaits!</p>
+              <span>Read More</span>
+            </a>
+          </div>
+        </div>
+    </section>
+    
+    <div class="footer">
+        <div class="links">
+            <h3>Quick Links</h3>
+            <ul>
+                <li><a href="offers.html">Offers & Discounts</a></li>
+                <li><a href="coupon.html">Get Coupon</a></li>
+                <li><a href="contact.html">Contact Us</a></li>
+                <li><a href="about.html">About</a></li>
+            </ul>
+        </div>
+        <div class="links">
+            <h3>New Products</h3>
+            <ul>
+                <li><a href="woman_cloth.html">Woman Cloth</a></li>
+                <li><a href="fashion_accessories.html">Fashion Accessories</a></li>
+                <li><a href="man_accessories.html">Man Accessories</a></li>
+                <li><a href="rubber_toys.html">Rubber made Toys</a></li>
+            </ul>
+        </div>
+        <div class="links">
+            <h3>Support</h3>
+            <ul>
+                <li><a href="faq.html">Frequently Asked Questions</a></li>
+                <li><a href="payment_issue.html">Report a Payment Issue</a></li>
+                <li><a href="terms.html">Terms & Conditions</a></li>
+                <li><a href="privacy.html">Privacy Policy</a></li>
+            </ul>
+        </div>
+    </div>
+    <script>
+        window.onload = () => {
+          const cart = JSON.parse(localStorage.getItem("cart")) || [];
+          const cartContainer = document.getElementById("cart-items");
+          cartContainer.innerHTML = "";
+      
+          if (cart.length === 0) {
+            cartContainer.innerHTML = "<p>Your cart is empty.</p>";
+          } else {
+            cart.forEach(item => {
+              const card = document.createElement("div");
+              card.className = "cart-item";
+              card.innerHTML = `
+                <strong>${item.package}</strong><br>
+                Name: ${item.name}<br>
+                Travellers: ${item.count}<br>
+                Total: $${item.total}
+              `;
+              cartContainer.appendChild(card);
+            });
+          }
+        };
       </script>
       
-
-        <section class="nav-bar">
-            <div class="logo">Trail Bliss</div>
-            <ul class="menu">
-                <li><a href="#">home</a></li>
-                <li><a href="#tour">tours</a></li>
-                <li><a href="#">package</a></li>
-                <li><a href="#blog">blog</a></li>
-                <li><a href="#about">about us</a></li>
-                <li><a href="#">contact us</a></li>
-            </ul>
-            </div>
-
-        </section>
-        <section class="banner">
-            <div class="video-container">
-                <video autoplay loop muted playsinline>
-                    <source src="bgvideo2.mp4" type="video/mp4">
-                    Your browser does not support the video tag.
-                </video>
-            </div>
-            <div class="banner-text-item">
-                <div class="banner-heading">
-                    <h1>Your Gateway to Unforgettable Journeys</h1>
-                </div>
-                <form class="form" id="travelForm">
-                    <input type="text" list="mylist" id="destination" placeholder="Where would you like to go?" required>
-                    <datalist id="mylist">
-                      <option value="London">
-                      <option value="Canada">
-                      <option value="Monaco">
-                      <option value="Japan">
-                      <option value="Switzerland">
-                      <option value="Seoul">
-                    </datalist>
-                    
-                    <input type="date" class="date" id="travelDate" required>
-                    <a href="#" class="book" onclick="handleBooking()">Book</a>
-                  </form>
-                  
-                  
-            </div>
-        </section>
-        
-        <section class="services">
-            <div class="service-item">
-                <img src="t4.png">
-                <h2>8000+ Our Local Guides</h2>
-            </div>
-            <div class="service-item">
-                <img src="t3.png">
-                <h2>100% Trusted Tour Agency</h2>
-            </div>
-            <div class="service-item">
-                <img src="t2.png">
-                <h2>28+ Years of Travel Experience</h2>
-            </div>
-            <div class="service-item">
-                <img src="t1.png">
-                <h2>98% Our Travelers are Happy</h2>
-            </div>
-        </section>
-        <section class="places" id="tour">
-            <div class="places-text">
-                <small>FEATURED TOURS PACKAGES</small>
-                <h2>Favourite Places</h2>
-            </div>
-
-            <div class="cards">
-                <div class="card">
-                    <div class="zoom-img">
-                        <div class="img-card">
-                            <img
-                                src="niagara2.jpg">
-                        </div>
-                    </div>
-
-                    <div class="text">
-                        <span class="rating">⭐⭐⭐⭐⭐</span>
-                        <h2>The Niagara Falls</h2>
-                        <p class="cost">$1870 / Per Person</p>
-                        <div class="card-box">
-                            <p class="time">🕓 2 Days</p>
-                            <p class="location">✈ Ontario-United States Border</p>
-                        </div>
-                    </div>
-
-                </div>
-                <div class="card">
-                    <div class="zoom-img">
-                        <div class="img-card">
-                            <img src="eiffel-tower.jpg">
-                        </div>
-                    </div>
-
-                    <div class="text">
-                        <span class="rating">⭐⭐⭐⭐⭐</span>
-                        <h2>Eiffel Tower</h2>
-                        <p class="cost">$1870 / Per Person</p>
-                        <div class="card-box">
-                            <p class="time">🕓 3 Days</p>
-                            <p class="location">✈ Paris, France</p>
-                        </div>
-                    </div>
-
-                </div>
-                <div class="card">
-                    <div class="zoom-img">
-                        <div class="img-card">
-                            <img src="sanfrancisco.jpg">
-                        </div>
-                    </div>
-
-                    <div class="text">
-                        <span class="rating">⭐⭐⭐⭐⭐</span>
-                        <h2>Golden Gate Bridge</h2>
-                        <p class="cost">$1870 / Per Person</p>
-                        <div class="card-box">
-                            <p class="time">🕓 3 Days</p>
-                            <p class="location">✈ California, United States</p>
-                        </div>
-                    </div>
-
-                </div>
-                <div class="card">
-                    <div class="zoom-img">
-                        <div class="img-card">
-                            <img
-                                src="tokyo.jpg">
-                        </div>
-                    </div>
-
-                    <div class="text">
-                        <span class="rating">⭐⭐⭐⭐⭐</span>
-                        <h2>Tokyo</h2>
-                        <p class="cost">$1870 / Per Person</p>
-                        <div class="card-box">
-                            <p class="time">🕓 3 Days</p>
-                            <p class="location">✈ Tokyo, Japan</p>
-                        </div>
-                    </div>
-
-                </div>
-                <div class="card">
-                    <div class="zoom-img">
-                        <div class="img-card">
-                            <img src="petronas.jpg">
-                        </div>
-                    </div>
-
-                    <div class="text">
-                        <span class="rating">⭐⭐⭐⭐⭐</span>
-                        <h2>Petronas Twin Towers</h2>
-                        <p class="cost">$1870 / Per Person</p>
-                        <div class="card-box">
-                            <p class="time">🕓 3 Days</p>
-                            <p class="location">✈ Kuala Lampur, Malaysia</p>
-                        </div>
-                    </div>
-
-                </div>
-                <div class="card">
-                    <div class="zoom-img">
-                        <div class="img-card">
-                            <img
-                                src="opera.jpg">
-                        </div>
-                    </div>
-
-                    <div class="text">
-                        <span class="rating">⭐⭐⭐⭐⭐</span>
-                        <h2>Sydney Opera House</h2>
-                        <p class="cost">$1870 / Per Person</p>
-                        <div class="card-box">
-                            <p class="time">🕓 3 Days</p>
-                            <p class="location">✈ Sydney, Australia</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-        
-        <section class="about" id="about">
-            <div class="about-img">
-                <img src="explore2.jpg">
-            </div>
-            <div class="about-text">
-                <small>ABOUT OUR COMPANY</small>
-                <h2>Website for planning trips</h2>
-                <p>TrailBliss is a state-of-the-art travel website designed to revolutionize 
-                    the way people explore the world.</p>
-
-                <label><input type="checkbox" checked>Personalized travel experiences tailored to your preferences</label>
-                <label><input type="checkbox" checked>Expert local guides ensuring authentic and memorable journeys</label>
-                <label><input type="checkbox" checked>24/7 customer support for a hassle-free travel experience</label>
-                <label><input type="checkbox" checked>Sustainable and responsible tourism practices for a better planet</label>
-                <a href="#">ABOUT US</a>
-            </div>
-        </section>
-        <div class="cart">
-            <h2>Your Cart</h2>
-            <ul id="cart-items"></ul>
-            <p>Total: $<span id="cart-total">0</span></p>
-            <button id="checkout-btn" onclick="checkout()">Checkout</button>
+<div class="chatbot-container" id="chatbot-container">
+    <div class="chatbot-header">
+        <div class="chatbot-logo">
+            <svg viewBox="0 0 24 24" width="24" height="24">
+                <path fill="white" d="M12,2C6.48,2,2,6.48,2,12s4.48,10,10,10s10-4.48,10-10S17.52,2,12,2z M12,20c-4.41,0-8-3.59-8-8s3.59-8,8-8s8,3.59,8,8 S16.41,20,12,20z M15,11H9v2h6V11z M12,15c-0.55,0-1-0.45-1-1s0.45-1,1-1s1,0.45,1,1S12.55,15,12,15z"/>
+            </svg>
+            <h3>Trail Bliss Assistant</h3>
         </div>
-        <section id="blog" class="blog-section">
-            <div class="blog-header">
-              <h2>Travel Inspiration & Tips</h2>
-              <p>Explore our latest articles on travel experiences, guides, and tips.</p>
-            </div>
-          
-            <div class="blog-container">
-              <div class="blog-post">
-                <a href="blogs/paris-guide.html">
-                  <img src="paris.jpg" alt="Paris Travel Guide">
-                  <h3>Ultimate Guide to Exploring Paris</h3>
-                  <p>Discover the must-visit places, hidden gems, and essential travel tips for an unforgettable trip to Paris.</p>
-                  <span>Read More</span>
-                </a>
-              </div>
-          
-              <div class="blog-post">
-                <a href="blogs/budget-vs-luxury.html">
-                  <img src="budget.jpg" alt="Budget Travel">
-                  <h3>Budget vs. Luxury Travel: Which is for You?</h3>
-                  <p>Should you splurge or save? Explore the pros and cons of both travel styles.</p>
-                  <span>Read More</span>
-                </a>
-              </div>
-          
-              <div class="blog-post">
-                <a href="blogs/adventure-destinations.html">
-                  <img src="adventure.jpg" alt="Adventure Travel">
-                  <h3>Top 5 Destinations for Thrill-Seekers</h3>
-                  <p>From skydiving in Dubai to scuba diving in the Great Barrier Reef – adventure awaits!</p>
-                  <span>Read More</span>
-                </a>
-              </div>
-            </div>
-          </section>
-        
-        <div class="footer">
-            <div class="links">
-                <h3>Quick Links</h3>
-                <ul>
-                    <li><a href="offers.html">Offers & Discounts</a></li>
-                    <li><a href="coupon.html">Get Coupon</a></li>
-                    <li><a href="contact.html">Contact Us</a></li>
-                    <li><a href="about.html">About</a></li>
-                </ul>
-            </div>
-            <div class="links">
-                <h3>New Products</h3>
-                <ul>
-                    <li><a href="woman_cloth.html">Woman Cloth</a></li>
-                    <li><a href="fashion_accessories.html">Fashion Accessories</a></li>
-                    <li><a href="man_accessories.html">Man Accessories</a></li>
-                    <li><a href="rubber_toys.html">Rubber made Toys</a></li>
-                </ul>
-            </div>
-            <div class="links">
-                <h3>Support</h3>
-                <ul>
-                    <li><a href="faq.html">Frequently Asked Questions</a></li>
-                    <li><a href="payment_issue.html">Report a Payment Issue</a></li>
-                    <li><a href="terms.html">Terms & Conditions</a></li>
-                    <li><a href="privacy.html">Privacy Policy</a></li>
-                </ul>
-            </div>
+        <button class="chatbot-close" onclick="toggleChatbot()">
+            <svg viewBox="0 0 24 24" width="18" height="18">
+                <path fill="white" d="M19,6.41L17.59,5L12,10.59L6.41,5L5,6.41L10.59,12L5,17.59L6.41,19L12,13.41L17.59,19L19,17.59L13.41,12L19,6.41Z"/>
+            </svg>
+        </button>
+    </div>
+    <div class="chatbot-messages" id="chatbot-messages">
+        <div class="chatbot-message bot-message">
+            Hi there! 👋 I'm your Trail Bliss assistant. How can I help you today?
         </div>
+    </div>
+    <div class="chatbot-input">
+        <input type="text" id="chatbot-user-input" placeholder="Type your message here..." 
+               onkeypress="handleChatbotInput(event)">
+        <button onclick="sendChatbotMessage()">
+            <svg viewBox="0 0 24 24" width="20" height="20">
+                <path fill="white" d="M2,21L23,12L2,3V10L17,12L2,14V21Z"/>
+            </svg>
+        </button>
+    </div>
+</div>
+<button class="chatbot-toggle" onclick="toggleChatbot()">
+    <svg viewBox="0 0 24 24" width="28" height="28">
+        <path fill="white" d="M20,2H4C2.9,2,2,2.9,2,4v16c0,1.1,0.9,2,2,2h16c1.1,0,2-0.9,2-2V4C22,2.9,21.1,2,20,2z M20,20H4V4h16V20z M18,6h-5v5h-2V6H6v12h5v-5h2v5h5V6z"/>
+    </svg>
+</button>
 
+<style>
+    .chatbot-toggle {
+        position: fixed;
+        bottom: 30px;
+        left: 30px;
+        background: #4a90e2;
+        color: white;
+        width: 56px;
+        height: 56px;
+        border-radius: 50%;
+        border: none;
+        cursor: pointer;
+        z-index: 1000;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        transition: all 0.3s ease;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 0;
+    }
+    
+    .chatbot-toggle:hover {
+        transform: scale(1.05);
+        background: #3a7bc8;
+        box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
+    }
+    
+    .chatbot-toggle svg {
+        fill: white;
+    }
+    
+    .chatbot-container {
+        position: fixed;
+        bottom: 100px;
+        left: 30px;
+        width: 350px;
+        height: 500px;
+        background: white;
+        border-radius: 12px;
+        box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
+        display: flex;
+        flex-direction: column;
+        z-index: 1001;
+        overflow: hidden;
+        transform: translateY(20px);
+        opacity: 0;
+        visibility: hidden;
+        transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+    }
+    
+    .chatbot-container.active {
+        transform: translateY(0);
+        opacity: 1;
+        visibility: visible;
+    }
+    
+    .chatbot-header {
+        background: #4a90e2;
+        color: white;
+        padding: 14px 16px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+    
+    .chatbot-logo {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+    
+    .chatbot-logo svg {
+        fill: white;
+    }
+    
+    .chatbot-logo h3 {
+        margin: 0;
+        font-size: 16px;
+        font-weight: 600;
+    }
+    
+    .chatbot-close {
+        background: none;
+        border: none;
+        color: white;
+        cursor: pointer;
+        padding: 4px;
+        border-radius: 50%;
+        transition: background 0.2s;
+    }
+    
+    .chatbot-close:hover {
+        background: rgba(255, 255, 255, 0.2);
+    }
+    
+    .chatbot-close svg {
+        fill: white;
+    }
+    
+    .chatbot-messages {
+        flex: 1;
+        padding: 16px;
+        overflow-y: auto;
+        background: #f8f9fa;
+    }
+    
+    .chatbot-message {
+        margin-bottom: 12px;
+        padding: 10px 14px;
+        border-radius: 18px;
+        max-width: 80%;
+        word-wrap: break-word;
+        font-size: 14px;
+        line-height: 1.4;
+        box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+    }
+    
+    .bot-message {
+        background: white;
+        color: #333;
+        border-bottom-left-radius: 4px;
+        align-self: flex-start;
+        border: 1px solid #e9ecef;
+    }
+    
+    .user-message {
+        background: #4a90e2;
+        color: white;
+        border-bottom-right-radius: 4px;
+        margin-left: auto;
+    }
+    
+    .chatbot-input {
+        display: flex;
+        padding: 12px;
+        border-top: 1px solid #e9ecef;
+        background: white;
+        align-items: center;
+    }
+    
+    .chatbot-input input {
+        flex: 1;
+        padding: 10px 14px;
+        border: 1px solid #e9ecef;
+        border-radius: 20px;
+        outline: none;
+        font-size: 14px;
+        transition: border 0.2s;
+    }
+    
+    .chatbot-input input:focus {
+        border-color: #4a90e2;
+    }
+    
+    .chatbot-input button {
+        margin-left: 10px;
+        padding: 10px;
+        background: #4a90e2;
+        color: white;
+        border: none;
+        border-radius: 50%;
+        cursor: pointer;
+        width: 40px;
+        height: 40px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        transition: background 0.2s;
+    }
+    
+    .chatbot-input button:hover {
+        background: #3a7bc8;
+    }
+    
+    .chatbot-input button svg {
+        fill: white;
+    }
+    
+    .quick-reply {
+        display: inline-block;
+        margin: 4px;
+        padding: 6px 12px;
+        background: white;
+        border: 1px solid #e9ecef;
+        border-radius: 15px;
+        cursor: pointer;
+        font-size: 13px;
+        transition: all 0.2s;
+    }
+    
+    .quick-reply:hover {
+        background: #f1f3f5;
+        border-color: #dee2e6;
+    }
+</style>
+
+<script>
+   
+    function toggleChatbot() {
+        const chatbot = document.getElementById('chatbot-container');
+        chatbot.classList.toggle('active');
+    }
+    
+    function sendChatbotMessage() {
+        const input = document.getElementById('chatbot-user-input');
+        const message = input.value.trim();
+        
+        if (message) {
+            addUserMessage(message);
+            input.value = '';
+            respondToMessage(message);
+        }
+    }
+    
+    function handleChatbotInput(event) {
+        if (event.key === 'Enter') {
+            sendChatbotMessage();
+        }
+    }
+    
+    function addUserMessage(text) {
+        const messages = document.getElementById('chatbot-messages');
+        const messageDiv = document.createElement('div');
+        messageDiv.className = 'chatbot-message user-message';
+        messageDiv.textContent = text;
+        messages.appendChild(messageDiv);
+        scrollToBottom();
+    }
+    
+    function addBotMessage(text, isHTML = false) {
+        const messages = document.getElementById('chatbot-messages');
+        const messageDiv = document.createElement('div');
+        messageDiv.className = 'chatbot-message bot-message';
+        
+        if (isHTML) {
+            messageDiv.innerHTML = text;
+        } else {
+            messageDiv.textContent = text;
+        }
+        
+        messages.appendChild(messageDiv);
+        scrollToBottom();
+    }
+    
+    function scrollToBottom() {
+        const messages = document.getElementById('chatbot-messages');
+        messages.scrollTop = messages.scrollHeight;
+    }
+    
+    function respondToMessage(message) {
+        const lowerMsg = message.toLowerCase();
+        setTimeout(() => {
+            if (lowerMsg.includes('hello') || lowerMsg.includes('hi') || lowerMsg.includes('hey')) {
+                addBotMessage('Hello! 😊 How can I assist you with your travel plans today?');
+                showQuickReplies(['Book a trip', 'Tour packages', 'Contact support']);
+            } 
+            else if (lowerMsg.includes('book') || lowerMsg.includes('reserve')) {
+                addBotMessage('I can help you book a trip! Where would you like to go?');
+                showQuickReplies(['London', 'Canada', 'Japan', 'Switzerland']);
+            }
+            else if (lowerMsg.includes('package') || lowerMsg.includes('tour')) {
+                addBotMessage('We have amazing tour packages available:');
+                addBotMessage(`
+                    <strong>Featured Tours:</strong><br>
+                    - The Niagara Falls ($1870)<br>
+                    - Eiffel Tower ($1870)<br>
+                    - Golden Gate Bridge ($1870)<br>
+                    - Tokyo ($1870)<br>
+                    <br>Click any card on our page to add to cart!
+                `, true);
+                showQuickReplies(['Book now', 'View all tours']);
+            }
+            else if (lowerMsg.includes('price') || lowerMsg.includes('cost')) {
+                addBotMessage('Our standard tour packages start at $1870 per person. Would you like to know about a specific destination?');
+            }
+            else if (lowerMsg.includes('contact') || lowerMsg.includes('support')) {
+                addBotMessage('You can contact us through our <a href="contact.html">Contact Page</a> or call us at +1 (555) 123-4567.', true);
+            }
+            else if (lowerMsg.includes('cart') || lowerMsg.includes('checkout')) {
+                const cart = JSON.parse(localStorage.getItem('cart')) || [];
+                if (cart.length > 0) {
+                    addBotMessage(`You have ${cart.length} items in your cart. Total: $${cart.reduce((sum, item) => sum + item.price, 0).toFixed(2)}`);
+                    addBotMessage('Click the cart icon in the bottom right to view or checkout!');
+                } else {
+                    addBotMessage('Your cart is currently empty. Browse our tours and click on any to add to your cart!');
+                }
+            }
+            else {
+                addBotMessage("I'm here to help with your travel plans! You can ask me about:<br><br>" +
+                    "- Booking a trip<br>" +
+                    "- Tour packages<br>" +
+                    "- Pricing information<br>" +
+                    "- Your shopping cart", true);
+                showQuickReplies(['Book a trip', 'Tour packages', 'View cart']);
+            }
+        }, 800);
+    }
+    
+    function showQuickReplies(replies) {
+        const messages = document.getElementById('chatbot-messages');
+        const repliesDiv = document.createElement('div');
+        repliesDiv.style.marginTop = '10px';
+        
+        replies.forEach(reply => {
+            const span = document.createElement('span');
+            span.className = 'quick-reply';
+            span.textContent = reply;
+            span.onclick = () => {
+                addUserMessage(reply);
+                respondToMessage(reply);
+            };
+            repliesDiv.appendChild(span);
+        });
+        
+        messages.appendChild(repliesDiv);
+        scrollToBottom();
+    }
+    
+    document.addEventListener('DOMContentLoaded', function() {
+        setTimeout(() => {
+            addBotMessage('Welcome to Trail Bliss! Need help planning your next adventure?');
+            showQuickReplies(['Book a trip', 'Tour packages', 'Contact support']);
+        }, 3000);
+    });
+</script>
 </body>
-
 </html>
